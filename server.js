@@ -10,7 +10,6 @@ var Article = require("./models/Article.js");
 var request = require("request");
 var cheerio = require("cheerio");
 
-mongoose.Promise = Promise;
 
 var PORT = process.env.PORT || 3000;
 
@@ -23,12 +22,25 @@ app.use(express.static("public"));
 
 var exphbs = require("express-handlebars");
 
-mongoose.connect("mongodb://heroku_jmv816f9:5j1nd4taq42hi29bfm5hobeujd@ds133192.mlab.com:33192/heroku_jmv816f9");
-//mongoose.connect("mongodb://localhost/mongoscraper");
+app.engine("handlebars", exphbs({
+    defaultLayout: "main",
+    partialsDir: path.join(__dirname, "/views/layouts/partials")
+}));
+app.set("view engine", "handlebars");
+
+// If deployed, use the deployed database. Otherwise use the local mongoHeadlines database
+var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongoHeadlines";
+
+// Set mongoose to leverage built in JavaScript ES6 Promises
+// Connect to the Mongo DB
+mongoose.Promise = Promise;
+mongoose.connect(MONGODB_URI);
+
+
 var db = mongoose.connection;
 
 db.on("error", function(error){
-    console.log("Mongoose Error: " , erro);
+    console.log("Mongoose Error: " , error);
 });
 
 db.once("open", function(){
