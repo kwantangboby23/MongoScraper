@@ -12,7 +12,7 @@ var cheerio = require("cheerio");
 
 mongoose.Promise = Promise;
 
-var port = process.env.PORT || 3000;
+var PORT = process.env.PORT || 3000;
 
 var app = express();
 
@@ -23,7 +23,8 @@ app.use(express.static("public"));
 
 var exphbs = require("express-handlebars");
 
-mongoose.connect("")
+mongoose.connect("mongodb://heroku_jmv816f9:5j1nd4taq42hi29bfm5hobeujd@ds133192.mlab.com:33192/heroku_jmv816f9");
+//mongoose.connect("mongodb://localhost/mongoscraper");
 var db = mongoose.connection;
 
 db.on("error", function(error){
@@ -224,8 +225,8 @@ app.get("/scrape", function(req, res) {
   });
   
  
-  app.listen(port, function() {
-    console.log("App running on port " + port);
+  app.listen(PORT, function() {
+    console.log("App running on port " + PORT);
   });
 
 
